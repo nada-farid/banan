@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Hacen Algeria Bd';
+    src: url('HacenAlgeriaBd.woff2') format('woff2'),
+        url('HacenAlgeriaBd.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
