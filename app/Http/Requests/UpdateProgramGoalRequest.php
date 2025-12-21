@@ -24,6 +24,10 @@ class UpdateProgramGoalRequest extends FormRequest
             'description' => [
                 'required',
             ],
+            'program_id' => [
+                'required',
+                'integer',
+            ],
         ];
     }
 }

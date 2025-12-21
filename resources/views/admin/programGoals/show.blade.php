@@ -25,6 +25,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.programGoal.fields.program') }}
+                        </th>
+                        <td>
+                            {{ $programGoal->program->title ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.programGoal.fields.title') }}
                         </th>
                         <td>

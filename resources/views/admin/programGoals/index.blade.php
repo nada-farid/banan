@@ -32,6 +32,9 @@
                             {{ trans('cruds.programGoal.fields.description') }}
                         </th>
                         <th>
+                            {{ trans('cruds.programGoal.fields.program') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -50,6 +53,9 @@
                             </td>
                             <td>
                                 {{ $programGoal->description ?? '' }}
+                            </td>
+                            <td>
+                                {{ $programGoal->program->title ?? '' }}
                             </td>
                             <td>
                                 @can('program_goal_show')

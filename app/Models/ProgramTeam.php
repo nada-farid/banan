@@ -20,6 +20,7 @@ class ProgramTeam extends Model
 
     protected $fillable = [
         'name',
+        'program_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -28,5 +29,10 @@ class ProgramTeam extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function program()
+    {
+        return $this->belongsTo(Program::class, 'program_id');
     }
 }

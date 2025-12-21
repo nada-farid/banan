@@ -21,6 +21,10 @@ class StoreProgramTeamRequest extends FormRequest
                 'string',
                 'required',
             ],
+            'program_id' => [
+                'required',
+                'integer',
+            ],
         ];
     }
 }

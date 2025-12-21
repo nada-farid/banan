@@ -469,6 +469,8 @@ return [
             'updated_at_helper' => ' ',
             'deleted_at'        => 'تاريخ الحذف',
             'deleted_at_helper' => ' ',
+            'program'           => 'البرنامج',
+            'program_helper'    => ' ',
         ],
     ],
     'programManagement' => [
@@ -491,6 +493,8 @@ return [
             'updated_at_helper'  => ' ',
             'deleted_at'         => 'تاريخ الحذف',
             'deleted_at_helper'  => ' ',
+            'program'            => 'البرنامج',
+            'program_helper'     => ' ',
         ],
     ],
     'hawkmaManagement' => [

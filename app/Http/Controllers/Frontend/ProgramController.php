@@ -24,7 +24,9 @@ class ProgramController extends Controller
     }
 
     public function show($slug){
-        $program = Program::where('slug', $slug)->first();
+        $program = Program::where('slug', $slug)
+            ->with(['programTimelines', 'programTeams', 'programGoals', 'category'])
+            ->first();
         return view('frontend.program-details', compact('program'));
     }
 

@@ -29,6 +29,9 @@
                             {{ trans('cruds.programTeam.fields.name') }}
                         </th>
                         <th>
+                            {{ trans('cruds.programTeam.fields.program') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -44,6 +47,9 @@
                             </td>
                             <td>
                                 {{ $programTeam->name ?? '' }}
+                            </td>
+                            <td>
+                                {{ $programTeam->program->title ?? '' }}
                             </td>
                             <td>
                                 @can('program_team_show')

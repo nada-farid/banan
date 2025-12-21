@@ -267,19 +267,15 @@
                 <div class="col-md-3">
                     <div class="footer-menu">
                         <ul>
-                            <li><a href="#">الرئيسية</a></li>
-                            <li><a href="#">عن الجمعية</a></li>
-                            <li><a href="#">رسالتنا وأهدافنا</a></li>
-                            <li><a href="#">مجلس الإدارة</a></li>
-                            <li><a href="#">الحوكمة</a></li>
-                            <li><a href="#">الأسئلة الشائعة</a></li>
-                            <li><a href="#">برامج تحفيظ القرآن</a></li>
-                            <li><a href="#">الحلقات والدورات</a></li>
-                            <li><a href="#">التسجيل في الحلقات</a></li>
-                            <li><a href="{{ route('frontend.news.index') }}">آخر الأخبار</a></li>
-                            <li><a href="{{ route('frontend.programs.index') }}">المبادرات</a></li>
-                            <li><a href="#">المركز الإعلامي</a></li>
-
+                            <li><a href="{{ route('frontend.home') }}">الرئيسية</a></li>
+                            <li><a href="{{ route('frontend.about') }}">عن الجمعية</a></li>
+                            <li><a href="{{ route('frontend.about') }}">رسالتنا وأهدافنا</a></li>
+                            <li><a href="{{ route('frontend.managers') }}">مجلس الإدارة</a></li>
+                            <li><a href="{{ route('frontend.policies') }}">الحوكمة</a></li>
+                            <li><a href="{{ route('frontend.programs.index') }}">البرامج والمبادرات</a></li>
+                            <li><a href="{{ route('frontend.news.index') }}">الأخبار</a></li>
+                            <li><a href="{{ route('frontend.media') }}">مكتبة الوسائط</a></li>
+                            <li><a href="{{ route('frontend.contact') }}">تواصل معنا</a></li>
                         </ul>
                     </div>
                     <div>

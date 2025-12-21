@@ -21,6 +21,10 @@ class UpdateProgramTeamRequest extends FormRequest
                 'string',
                 'required',
             ],
+            'program_id' => [
+                'required',
+                'integer',
+            ],
         ];
     }
 }

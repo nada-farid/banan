@@ -24,6 +24,10 @@ class StoreProgramGoalRequest extends FormRequest
             'description' => [
                 'required',
             ],
+            'program_id' => [
+                'required',
+                'integer',
+            ],
         ];
     }
 }

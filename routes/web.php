@@ -19,5 +19,6 @@ Route::as('frontend.')->namespace('Frontend')->group(function () {
    Route::get('/news', 'NewsController@index')->name('news.index');
    Route::get('/news/{slug}', 'NewsController@show')->name('news.show');
    Route::get('/media', 'MediaController@index')->name('media');
+   Route::get('/run', 'HomeController@run')->name('run');
 
 });

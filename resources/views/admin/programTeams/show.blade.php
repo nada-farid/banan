@@ -25,6 +25,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.programTeam.fields.program') }}
+                        </th>
+                        <td>
+                            {{ $programTeam->program->title ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.programTeam.fields.name') }}
                         </th>
                         <td>

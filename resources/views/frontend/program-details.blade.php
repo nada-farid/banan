@@ -42,7 +42,7 @@
                 <div class="card mb-3">
                     <h3>الجدول الزمني</h3>
                     <ul class="list-unstyled ps-3 border-start border-2 border-secondary">
-                        @if ($program->programTimelines != null)
+                        @if ($program->programTimelines != null && $program->programTimelines->count() > 0)
                         @foreach ($program->programTimelines as $timeline)
                         <li class="mb-2"><i class="fa-solid fa-calendar-days text-warning"></i><b>{{ $timeline->title }}:</b> {{ $timeline->description }}</li>
                         @endforeach
@@ -51,11 +51,23 @@
                         @endif
                     </ul>
                 </div>
-                <div class="card">
-                    <h2>الأهداف</h2>
+                <div class="card mb-3">
+                    <h3>فريق المبادرة</h3>
                     <ul class="list-unstyled ps-3 border-start border-2 border-secondary">
-                        @if ($program->goals != null)
-                        @foreach ($program->goals as $goal)
+                        @if ($program->programTeams != null && $program->programTeams->count() > 0)
+                        @foreach ($program->programTeams as $team)
+                        <li class="mb-2"><i class="fa-solid fa-user text-success"></i> {{ $team->name }}</li>
+                        @endforeach
+                        @else
+                        <li class="mb-2">لا يوجد فريق</li>
+                        @endif
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>الأهداف</h3>
+                    <ul class="list-unstyled ps-3 border-start border-2 border-secondary">
+                        @if ($program->programGoals != null && $program->programGoals->count() > 0)
+                        @foreach ($program->programGoals as $goal)
                         <li class="mb-2"><i class="fa-solid fa-bullseye text-warning"></i><b>{{ $goal->title }}:</b> {{ $goal->description }}</li>
                         @endforeach
                         @else

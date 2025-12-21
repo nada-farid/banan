@@ -92,6 +92,21 @@ class Program extends Model implements HasMedia
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function programTimelines()
+    {
+        return $this->hasMany(ProgramTimeline::class, 'program_id');
+    }
+
+    public function programTeams()
+    {
+        return $this->hasMany(ProgramTeam::class, 'program_id');
+    }
+
+    public function programGoals()
+    {
+        return $this->hasMany(ProgramGoal::class, 'program_id');
+    }
+
     public function getStartDateAttribute($value)
     {
         return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;

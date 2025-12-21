@@ -7,6 +7,7 @@ use App\Http\Requests\MassDestroyProgramTeamRequest;
 use App\Http\Requests\StoreProgramTeamRequest;
 use App\Http\Requests\UpdateProgramTeamRequest;
 use App\Models\ProgramTeam;
+use App\Models\Program;
 use Gate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ class ProgramTeamController extends Controller
     {
         abort_if(Gate::denies('program_team_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $programTeams = ProgramTeam::all();
+        $programTeams = ProgramTeam::with(['program'])->get();
 
         return view('admin.programTeams.index', compact('programTeams'));
     }
@@ -26,7 +27,9 @@ class ProgramTeamController extends Controller
     {
         abort_if(Gate::denies('program_team_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.programTeams.create');
+        $programs = Program::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.programTeams.create', compact('programs'));
     }
 
     public function store(StoreProgramTeamRequest $request)
@@ -40,7 +43,11 @@ class ProgramTeamController extends Controller
     {
         abort_if(Gate::denies('program_team_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return view('admin.programTeams.edit', compact('programTeam'));
+        $programs = Program::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $programTeam->load('program');
+
+        return view('admin.programTeams.edit', compact('programTeam', 'programs'));
     }
 
     public function update(UpdateProgramTeamRequest $request, ProgramTeam $programTeam)
@@ -53,6 +60,8 @@ class ProgramTeamController extends Controller
     public function show(ProgramTeam $programTeam)
     {
         abort_if(Gate::denies('program_team_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $programTeam->load('program');
 
         return view('admin.programTeams.show', compact('programTeam'));
     }
