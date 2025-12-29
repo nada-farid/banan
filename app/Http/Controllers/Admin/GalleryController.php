@@ -85,8 +85,8 @@ class GalleryController extends Controller
             $gallery->addMedia(storage_path('tmp/uploads/' . basename($request->input('image'))))->toMediaCollection('image');
         }
 
-        if ($request->input('photos', false)) {
-            $gallery->addMedia(storage_path('tmp/uploads/' . basename($request->input('photos'))))->toMediaCollection('photos');
+        foreach ($request->input('photos', []) as $file) {
+            $gallery->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photos');
         }
 
         if ($media = $request->input('ck-media', false)) {
@@ -118,15 +118,18 @@ class GalleryController extends Controller
             $gallery->image->delete();
         }
 
-        if ($request->input('photos', false)) {
-            if (! $gallery->photos || $request->input('photos') !== $gallery->photos->file_name) {
-                if ($gallery->photos) {
-                    $gallery->photos->delete();
+        if (count($gallery->photos) > 0) {
+            foreach ($gallery->photos as $media) {
+                if (! in_array($media->file_name, $request->input('photos', []))) {
+                    $media->delete();
                 }
-                $gallery->addMedia(storage_path('tmp/uploads/' . basename($request->input('photos'))))->toMediaCollection('photos');
             }
-        } elseif ($gallery->photos) {
-            $gallery->photos->delete();
+        }
+        $media = $gallery->photos->pluck('file_name')->toArray();
+        foreach ($request->input('photos', []) as $file) {
+            if (count($media) === 0 || ! in_array($file, $media)) {
+                $gallery->addMedia(storage_path('tmp/uploads/' . basename($file)))->toMediaCollection('photos');
+            }
         }
 
         return redirect()->route('admin.galleries.index');

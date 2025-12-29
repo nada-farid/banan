@@ -33,7 +33,9 @@
 
         </div>
 
-
+        {{ $programs->links(
+            'vendor.pagination.custom'
+        ) }}
     </div>
 
 
