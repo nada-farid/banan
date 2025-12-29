@@ -21,7 +21,7 @@
                 <h1>كلمة رئيس مجلس الإدارة</h1>
                 @if(get_setting('chairman_message'))
                 <div class="chairman-message">
-                    {!! nl2br(e(get_setting('chairman_message'))) !!}
+                    {!! (get_setting('chairman_message')) !!}
                 </div>
                 @endif
                 <p class="chairman-name">

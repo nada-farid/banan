@@ -99,20 +99,26 @@ class SettingController extends Controller
             if ($request->has('logo')) {
                 if ($request->input('logo') != "undefined") {
                     $filePath = storage_path('tmp/uploads/' . basename($request->input('logo')));
-                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                    $file_name = time() . '_logo_settings.' . $extension;
-                    File::move($filePath, public_path('settings/' . $file_name));
-                    Setting::updateOrCreate(['key' => 'logo'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    if (File::exists($filePath)) {
+                        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $file_name = time() . '_logo_settings.' . $extension;
+                        $destinationPath = public_path('settings/' . $file_name);
+                        File::move($filePath, $destinationPath);
+                        Setting::updateOrCreate(['key' => 'logo'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    }
                 }
             }
             
             if ($request->has('logo_footer')) {
                 if ($request->input('logo_footer') != "undefined") {
                     $filePath = storage_path('tmp/uploads/' . basename($request->input('logo_footer')));
-                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                    $file_name = time() . '_logo_footer_settings.' . $extension;
-                    File::move($filePath, public_path('settings/' . $file_name));
-                    Setting::updateOrCreate(['key' => 'logo_footer'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    if (File::exists($filePath)) {
+                        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $file_name = time() . '_logo_footer_settings.' . $extension;
+                        $destinationPath = public_path('settings/' . $file_name);
+                        File::move($filePath, $destinationPath);
+                        Setting::updateOrCreate(['key' => 'logo_footer'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    }
                 }
             }
             
@@ -120,10 +126,13 @@ class SettingController extends Controller
             if ($request->has('chairman_image')) {
                 if ($request->input('chairman_image') != "undefined") {
                     $filePath = storage_path('tmp/uploads/' . basename($request->input('chairman_image')));
-                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                    $file_name = time() . '_chairman_image.' . $extension;
-                    File::move($filePath, public_path('settings/' . $file_name));
-                    Setting::updateOrCreate(['key' => 'chairman_image'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    if (File::exists($filePath)) {
+                        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $file_name = time() . '_chairman_image.' . $extension;
+                        $destinationPath = public_path('settings/' . $file_name);
+                        File::move($filePath, $destinationPath);
+                        Setting::updateOrCreate(['key' => 'chairman_image'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    }
                 }
             }
             
@@ -131,10 +140,13 @@ class SettingController extends Controller
             if ($request->has('organizational_structure_image')) {
                 if ($request->input('organizational_structure_image') != "undefined") {
                     $filePath = storage_path('tmp/uploads/' . basename($request->input('organizational_structure_image')));
-                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                    $file_name = time() . '_organizational_structure.' . $extension;
-                    File::move($filePath, public_path('settings/' . $file_name));
-                    Setting::updateOrCreate(['key' => 'organizational_structure_image'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    if (File::exists($filePath)) {
+                        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $file_name = time() . '_organizational_structure.' . $extension;
+                        $destinationPath = public_path('settings/' . $file_name);
+                        File::move($filePath, $destinationPath);
+                        Setting::updateOrCreate(['key' => 'organizational_structure_image'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    }
                 }
             }
             
@@ -142,10 +154,13 @@ class SettingController extends Controller
             if ($request->has('license_certificate_image')) {
                 if ($request->input('license_certificate_image') != "undefined") {
                     $filePath = storage_path('tmp/uploads/' . basename($request->input('license_certificate_image')));
-                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                    $file_name = time() . '_license_certificate.' . $extension;
-                    File::move($filePath, public_path('settings/' . $file_name));
-                    Setting::updateOrCreate(['key' => 'license_certificate_image'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    if (File::exists($filePath)) {
+                        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $file_name = time() . '_license_certificate.' . $extension;
+                        $destinationPath = public_path('settings/' . $file_name);
+                        File::move($filePath, $destinationPath);
+                        Setting::updateOrCreate(['key' => 'license_certificate_image'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    }
                 }
             }
 
@@ -164,10 +179,13 @@ class SettingController extends Controller
             if ($request->has('metaimage')) {
                 if ($request->input('metaimage') != "undefined") {
                     $filePath = storage_path('tmp/uploads/' . basename($request->input('metaimage')));
-                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                    $file_name = time() . '_metaimage_settings.' . $extension;
-                    File::move($filePath, public_path('settings/' . $file_name));
-                    Setting::updateOrCreate(['key' => 'metaimage'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    if (File::exists($filePath)) {
+                        $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                        $file_name = time() . '_metaimage_settings.' . $extension;
+                        $destinationPath = public_path('settings/' . $file_name);
+                        File::move($filePath, $destinationPath);
+                        Setting::updateOrCreate(['key' => 'metaimage'], ['value' => $this->encodeSettingValue('settings/' . $file_name)]);
+                    }
                 }
             }
         } elseif ($request->setting_type == 'setting_4') {
