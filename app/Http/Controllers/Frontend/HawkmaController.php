@@ -12,12 +12,12 @@ use App\Models\ReportCategory;
 class HawkmaController extends Controller
 {
     public function policies(){
-        $policies = Hawkma::orderBy('id', 'asc')->get();
+        $policies = Hawkma::orderBy('id', 'asc')->paginate(8);
         $categories = HawkmaCategory::orderBy('id', 'asc')->get();
         return view('frontend.policies', compact('policies', 'categories'));
     }
     public function reports(){
-        $reports = Report::orderBy('id', 'asc')->get();
+        $reports = Report::orderBy('id', 'asc')->paginate(8);
         $categories = ReportCategory::orderBy('id', 'asc')->get();
         return view('frontend.reports', compact('reports', 'categories'));
     }
