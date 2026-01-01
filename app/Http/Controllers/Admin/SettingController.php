@@ -8,6 +8,7 @@ use App\Http\Requests\MassDestroySettingRequest;
 use App\Http\Requests\StoreSettingRequest;
 use App\Http\Requests\UpdateSettingRequest;
 use App\Models\Setting;
+use App\Models\DynamicSettingField;
 use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -25,8 +26,9 @@ class SettingController extends Controller
         abort_if(Gate::denies('setting_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $setting = Setting::first();
+        $dynamicFields = DynamicSettingField::ordered()->get();
 
-        return view('admin.settings.edit', compact('setting'));
+        return view('admin.settings.edit', compact('setting', 'dynamicFields'));
     }
 
     public function create()
@@ -196,6 +198,18 @@ class SettingController extends Controller
             Setting::updateOrCreate(['key' => 'certificates_count'], ['value' => $this->encodeSettingValue($request->certificates_count)]);
             Setting::updateOrCreate(['key' => 'initiatives_count'], ['value' => $this->encodeSettingValue($request->initiatives_count)]);
             Setting::updateOrCreate(['key' => 'courses_count'], ['value' => $this->encodeSettingValue($request->courses_count)]);
+        } elseif ($request->setting_type == 'setting_5') {
+            // Dynamic Fields Content Update
+            if ($request->has('dynamic_fields')) {
+                foreach ($request->dynamic_fields as $fieldId => $fieldData) {
+                    $field = DynamicSettingField::find($fieldId);
+                    if ($field) {
+                        $field->update([
+                            'content' => $fieldData['content'] ?? $field->content,
+                        ]);
+                    }
+                }
+            }
         } 
 
         // Clear cache after update
@@ -256,5 +270,90 @@ class SettingController extends Controller
         ]);
         
         Setting::updateOrCreate(['key' => $key], ['value' => $value]);
+    }
+
+    /**
+     * Store a new dynamic field
+     */
+    public function storeDynamicField(Request $request)
+    {
+        abort_if(Gate::denies('setting_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $request->validate([
+            'key' => 'required|string|unique:dynamic_settings_fields,key',
+            'title' => 'required|string',
+            'content' => 'nullable|string',
+            'order' => 'nullable|integer',
+        ]);
+
+        $maxOrder = DynamicSettingField::max('order') ?? 0;
+
+        $field = DynamicSettingField::create([
+            'key' => $request->key,
+            'title' => $request->title,
+            'content' => $request->content,
+            'order' => $request->order ?? ($maxOrder + 1),
+            'is_active' => true,
+        ]);
+
+        Artisan::call('cache:clear');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم إضافة الحقل بنجاح',
+            'field' => $field
+        ]);
+    }
+
+    /**
+     * Update a dynamic field
+     */
+    public function updateDynamicField(Request $request, $id)
+    {
+        abort_if(Gate::denies('setting_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $field = DynamicSettingField::findOrFail($id);
+
+        $request->validate([
+            'key' => 'required|string|unique:dynamic_settings_fields,key,' . $id,
+            'title' => 'required|string',
+            'content' => 'nullable|string',
+            'order' => 'nullable|integer',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $field->update([
+            'key' => $request->key,
+            'title' => $request->title,
+            'content' => $request->content,
+            'order' => $request->order ?? $field->order,
+            'is_active' => $request->has('is_active') ? $request->is_active : $field->is_active,
+        ]);
+
+        Artisan::call('cache:clear');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم تحديث الحقل بنجاح',
+            'field' => $field
+        ]);
+    }
+
+    /**
+     * Delete a dynamic field
+     */
+    public function deleteDynamicField($id)
+    {
+        abort_if(Gate::denies('setting_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $field = DynamicSettingField::findOrFail($id);
+        $field->delete();
+
+        Artisan::call('cache:clear');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'تم حذف الحقل بنجاح'
+        ]);
     }
 }

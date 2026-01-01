@@ -104,6 +104,10 @@ class NewsController extends Controller
             $news->addMedia(storage_path('tmp/uploads/' . basename($request->input('inside_image'))))->toMediaCollection('inside_image');
         }
 
+        if ($request->input('file', false)) {
+            $news->addMedia(storage_path('tmp/uploads/' . basename($request->input('file'))))->toMediaCollection('file');
+        }
+
         if ($media = $request->input('ck-media', false)) {
             Media::whereIn('id', $media)->update(['model_id' => $news->id]);
         }
@@ -111,15 +115,18 @@ class NewsController extends Controller
         return redirect()->route('admin.newss.index');
     }
 
-    public function edit(News $news)
+    public function edit($id)
     {
         abort_if(Gate::denies('news_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $news = News::find($id);
 
         return view('admin.newss.edit', compact('news'));
     }
 
-    public function update(UpdateNewsRequest $request, News $news)
+    public function update(UpdateNewsRequest $request , $id)
     {
+        $news = News::find($id);
         // إنشاء slug فريد إذا تم تغيير العنوان
         if ($request->has('title') && $request->input('title') !== $news->title) {
             $baseSlug = Str::slug($request->input('title'), '-');
@@ -159,11 +166,23 @@ class NewsController extends Controller
             $news->inside_image->delete();
         }
 
+        if ($request->input('file', false)) {
+            if (! $news->file || $request->input('file') !== $news->file->file_name) {
+                if ($news->file) {
+                    $news->file->delete();
+                }
+                $news->addMedia(storage_path('tmp/uploads/' . basename($request->input('file'))))->toMediaCollection('file');
+            }
+        } elseif ($news->file) {
+            $news->file->delete();
+        }
+
         return redirect()->route('admin.newss.index');
     }
 
     public function show(News $news)
     {
+
         abort_if(Gate::denies('news_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return view('admin.newss.show', compact('news'));

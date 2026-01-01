@@ -110,6 +110,11 @@
                                                     <li><a href="{{ route('frontend.employment') }}"> التوظيف</a></li>
                                                     <li><a href="{{ route('frontend.license') }}">شهادة ترخيص الجمعية </a></li>
 
+                                                    @if(get_dynamic_fields() && get_dynamic_fields()->count() > 0)
+                                                        @foreach(get_dynamic_fields() as $field)
+                                                            <li><a href="{{ route('frontend.about') }}?tab=dynamic-tab-{{ $field->id }}#dynamic-tab-{{ $field->id }}">{{ $field->title }}</a></li>
+                                                        @endforeach
+                                                    @endif
                                                 </ul>
                                             </li>
                                             <li>
@@ -193,6 +198,11 @@
                             <li><a href="{{ route('frontend.employment') }}"> التوظيف</a></li>
                             <li><a href="{{ route('frontend.license') }}">شهادة ترخيص الجمعية </a></li>
 
+                            @if(get_dynamic_fields() && get_dynamic_fields()->count() > 0)
+                                @foreach(get_dynamic_fields() as $field)
+                                    <li><a href="{{ route('frontend.about') }}?tab=dynamic-tab-{{ $field->id }}#dynamic-tab-{{ $field->id }}">{{ $field->title }}</a></li>
+                                @endforeach
+                            @endif
                         </ul>
                     </li>
 

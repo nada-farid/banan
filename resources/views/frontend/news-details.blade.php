@@ -40,7 +40,17 @@
                             </div>
 
                             <h4 class="mt-3">{{ $news->title }}</h4>
-                            {!! nl2br(e($news->description)) !!}
+                            {!! $news->description !!}
+                            
+                            @if($news->file)
+                                <div class="news-file mt-4 p-3" style="background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+                                    <h5 class="mb-3">الملف المرفق:</h5>
+                                    <a href="{{ $news->file->getUrl() }}" target="_blank" class="btn btn-primary" download>
+                                        <i class="fa fa-download"></i> تحميل الملف
+                                        <small class="d-block mt-1" style="font-size: 12px;">{{ $news->file->name }}</small>
+                                    </a>
+                                </div>
+                            @endif
                         </div>
 
 

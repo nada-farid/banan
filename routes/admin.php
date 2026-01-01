@@ -135,6 +135,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('settings', 'SettingController@update')->name('settings.update');
     Route::post('settings/media', 'SettingController@storeMedia')->name('settings.storeMedia');
     Route::post('settings/ckmedia', 'SettingController@storeCKEditorImages')->name('settings.storeCKEditorImages');
+    
+    // Dynamic Settings Fields
+    Route::post('settings/dynamic-fields', 'SettingController@storeDynamicField')->name('settings.storeDynamicField');
+    Route::put('settings/dynamic-fields/{id}', 'SettingController@updateDynamicField')->name('settings.updateDynamicField');
+    Route::delete('settings/dynamic-fields/{id}', 'SettingController@deleteDynamicField')->name('settings.deleteDynamicField');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password

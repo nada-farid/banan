@@ -18,6 +18,7 @@ class News extends Model implements HasMedia
     protected $appends = [
         'photo',
         'inside_image',
+        'file',
     ];
 
     protected $dates = [
@@ -72,4 +73,11 @@ class News extends Model implements HasMedia
 
         return $file;
     }
+
+  
+    public function getFileAttribute()
+    {
+        return $this->getMedia('file')->last();
+    }
+
 }

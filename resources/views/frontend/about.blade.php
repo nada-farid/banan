@@ -15,6 +15,11 @@
                 <button data-tab="tab3">اللجنة التنفيذية</button>
                 <button data-tab="tab4">لجنة الاستدامة المالية</button>
                 <button data-tab="tab5">فريق العمل</button>
+                @if(isset($dynamicFields) && $dynamicFields->count() > 0)
+                    @foreach($dynamicFields as $index => $field)
+                        <button data-tab="dynamic-tab-{{ $field->id }}">{{ $field->title }}</button>
+                    @endforeach
+                @endif
             </div>
 
             <!-- Tabs Content -->
@@ -108,10 +113,60 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Dynamic Fields Tabs -->
+                @if(isset($dynamicFields) && $dynamicFields->count() > 0)
+                    @foreach($dynamicFields as $field)
+                        <div class="tab-pane" id="dynamic-tab-{{ $field->id }}">
+                            <h2>{{ $field->title }}</h2>
+                            <div class="dynamic-field-content mt-4">
+                                @if($field->content)
+                                    {!! $field->content !!}
+                                @else
+                                    <p class="text-muted">لا يوجد محتوى متاح</p>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
 
         </div>
     </div>
 
 </section>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        // فتح التبويب المحدد من URL
+        var urlParams = new URLSearchParams(window.location.search);
+        var tabParam = urlParams.get('tab');
+        var hash = window.location.hash;
+        
+        var targetTab = tabParam || hash.replace('#', '');
+        
+        if (targetTab) {
+            // إزالة active من جميع الأزرار
+            document.querySelectorAll('.tabs-menu button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // إخفاء جميع المحتويات
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.remove('active');
+            });
+            
+            // إظهار التبويب المحدد
+            var targetButton = document.querySelector(`.tabs-menu button[data-tab="${targetTab}"]`);
+            var targetPane = document.getElementById(targetTab);
+            
+            if (targetButton && targetPane) {
+                targetButton.classList.add('active');
+                targetPane.classList.add('active');
+            }
+        }
+    });
+</script>
 @endsection

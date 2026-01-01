@@ -42,6 +42,12 @@
                         {{ trans('cruds.setting.statistics') }}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link @if (request('setting_type') == 'setting_5') active @endif" href="#setting_5" role="tab"
+                        data-toggle="tab">
+                        الحقول الديناميكية
+                    </a>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -300,6 +306,95 @@
                         </div>
                     </form>
                 </div>
+                <div class="tab-pane @if (request('setting_type') == 'setting_5') active @endif" role="tabpanel" id="setting_5">
+                    <div class="p-4">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">إدارة الحقول الديناميكية</h5>
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addFieldModal">
+                                    <i class="fa fa-plus"></i> إضافة حقل جديد
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>المفتاح</th>
+                                                <th>العنوان</th>
+                                                <th>الترتيب</th>
+                                                <th>الحالة</th>
+                                                <th>الإجراءات</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dynamicFieldsTable">
+                                            @forelse($dynamicFields ?? [] as $field)
+                                                <tr data-field-id="{{ $field->id }}">
+                                                    <td>{{ $field->key }}</td>
+                                                    <td>{{ $field->title }}</td>
+                                                    <td>{{ $field->order }}</td>
+                                                    <td>
+                                                        <span class="badge badge-{{ $field->is_active ? 'success' : 'danger' }}">
+                                                            {{ $field->is_active ? 'نشط' : 'معطل' }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-info edit-field-btn" 
+                                                                data-field-id="{{ $field->id }}"
+                                                                data-key="{{ $field->key }}"
+                                                                data-title="{{ $field->title }}"
+                                                                data-content="{{ $field->content }}"
+                                                                data-order="{{ $field->order }}"
+                                                                data-is-active="{{ $field->is_active }}">
+                                                            <i class="fa fa-edit"></i> تعديل
+                                                        </button>
+                                                        <button type="button" class="btn btn-sm btn-danger delete-field-btn" 
+                                                                data-field-id="{{ $field->id }}">
+                                                            <i class="fa fa-trash"></i> حذف
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="5" class="text-center">لا توجد حقول ديناميكية</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- عرض محتوى الحقول -->
+                        @if(isset($dynamicFields) && $dynamicFields->count() > 0)
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">محتوى الحقول الديناميكية</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" name="setting_type" value="setting_5">
+                                        @foreach($dynamicFields as $field)
+                                            <div class="form-group">
+                                                <label for="dynamic_field_{{ $field->id }}">{{ $field->title }}</label>
+                                                <textarea class="form-control ckeditor" 
+                                                          name="dynamic_fields[{{ $field->id }}][content]" 
+                                                          id="dynamic_field_{{ $field->id }}" 
+                                                          rows="5">{{ $field->content }}</textarea>
+                                            </div>
+                                        @endforeach
+                                        <div class="form-group">
+                                            <button class="btn btn-danger" type="submit">
+                                                {{ trans('global.save') }}
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
                 {{-- <div class="tab-pane @if (request('setting_type') == 'setting_5') active @endif" role="tabpanel" id="setting_5">
                     <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data"
                         class="p-4">
@@ -347,6 +442,46 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('styles')
+<style>
+    .nav-tabs {
+        display: flex !important;
+        flex-wrap: wrap;
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+    }
+    .nav-tabs .nav-item {
+        margin-bottom: -1px;
+    }
+    .nav-tabs .nav-link {
+        display: block;
+        padding: 0.5rem 1rem;
+        border: 1px solid transparent;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        color: #495057;
+        text-decoration: none;
+    }
+    .nav-tabs .nav-link:hover {
+        border-color: #e9ecef #e9ecef #dee2e6;
+    }
+    .nav-tabs .nav-link.active {
+        color: #495057;
+        background-color: #fff;
+        border-color: #dee2e6 #dee2e6 #fff;
+    }
+    .tab-content {
+        margin-top: 1rem;
+    }
+    .tab-pane {
+        display: none;
+    }
+    .tab-pane.active {
+        display: block;
+    }
+</style>
 @endsection
 
 @section('scripts')
@@ -763,6 +898,173 @@
                         extraPlugins: [SimpleUploadAdapter]
                     }
                 );
+            }
+        });
+    </script>
+
+    <!-- Modal for Add/Edit Dynamic Field -->
+    <div class="modal fade" id="addFieldModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fieldModalTitle">إضافة حقل جديد</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form id="fieldForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="field_id" name="field_id">
+                        <div class="form-group">
+                            <label for="field_key">المفتاح (Key) *</label>
+                            <input type="text" class="form-control" id="field_key" name="key" required 
+                                   placeholder="مثال: about_us, governance">
+                            <small class="form-text text-muted">يجب أن يكون فريداً (بالإنجليزية، بدون مسافات)</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="field_title">العنوان *</label>
+                            <input type="text" class="form-control" id="field_title" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="field_content">المحتوى</label>
+                            <textarea class="form-control" id="field_content" name="content" rows="5"></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="field_order">الترتيب</label>
+                                <input type="number" class="form-control" id="field_order" name="order" value="0">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="form-check mt-4">
+                                    <input type="checkbox" class="form-check-input" id="field_is_active" name="is_active" checked>
+                                    <label class="form-check-label" for="field_is_active">نشط</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
+                        <button type="submit" class="btn btn-primary">حفظ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            var isEditMode = false;
+            var currentFieldId = null;
+
+            // Reset modal when opening for add
+            $('#addFieldModal').on('show.bs.modal', function(e) {
+                if (!$(e.relatedTarget).hasClass('edit-field-btn')) {
+                    resetModal();
+                    isEditMode = false;
+                    $('#fieldModalTitle').text('إضافة حقل جديد');
+                }
+            });
+
+            // Edit field button
+            $(document).on('click', '.edit-field-btn', function() {
+                isEditMode = true;
+                currentFieldId = $(this).data('field-id');
+                $('#fieldModalTitle').text('تعديل حقل');
+                $('#field_id').val(currentFieldId);
+                $('#field_key').val($(this).data('key'));
+                $('#field_title').val($(this).data('title'));
+                $('#field_content').val($(this).data('content') || '');
+                $('#field_order').val($(this).data('order'));
+                $('#field_is_active').prop('checked', $(this).data('is-active') == 1);
+                $('#addFieldModal').modal('show');
+            });
+
+            // Delete field button
+            $(document).on('click', '.delete-field-btn', function() {
+                if (!confirm('هل أنت متأكد من حذف هذا الحقل؟')) {
+                    return;
+                }
+
+                var fieldId = $(this).data('field-id');
+                var row = $(this).closest('tr');
+
+                $.ajax({
+                    url: '{{ route("admin.settings.deleteDynamicField", ":id") }}'.replace(':id', fieldId),
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            row.fadeOut(300, function() {
+                                $(this).remove();
+                                if ($('#dynamicFieldsTable tr').length <= 1) {
+                                    $('#dynamicFieldsTable').append(
+                                        '<tr><td colspan="5" class="text-center">لا توجد حقول ديناميكية</td></tr>'
+                                    );
+                                }
+                            });
+                            alert('تم حذف الحقل بنجاح');
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        alert('حدث خطأ أثناء حذف الحقل');
+                    }
+                });
+            });
+
+            // Submit form
+            $('#fieldForm').on('submit', function(e) {
+                e.preventDefault();
+
+                var formData = {
+                    key: $('#field_key').val(),
+                    title: $('#field_title').val(),
+                    content: $('#field_content').val(),
+                    order: $('#field_order').val() || 0,
+                    is_active: $('#field_is_active').is(':checked') ? 1 : 0
+                };
+
+                var url, method;
+                if (isEditMode) {
+                    url = '{{ route("admin.settings.updateDynamicField", ":id") }}'.replace(':id', currentFieldId);
+                    method = 'PUT';
+                } else {
+                    url = '{{ route("admin.settings.storeDynamicField") }}';
+                    method = 'POST';
+                }
+
+                $.ajax({
+                    url: url,
+                    type: method,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#addFieldModal').modal('hide');
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr) {
+                        var errors = xhr.responseJSON?.errors || {};
+                        var errorMsg = 'حدث خطأ:\n';
+                        for (var key in errors) {
+                            errorMsg += errors[key][0] + '\n';
+                        }
+                        alert(errorMsg || 'حدث خطأ أثناء حفظ الحقل');
+                    }
+                });
+            });
+
+            function resetModal() {
+                $('#fieldForm')[0].reset();
+                $('#field_id').val('');
+                $('#field_is_active').prop('checked', true);
+                currentFieldId = null;
             }
         });
     </script>

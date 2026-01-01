@@ -17,6 +17,7 @@ use App\Models\Partner;
 use App\Models\Award;
 use App\Models\Job;
 use App\Models\Employment;
+use App\Models\DynamicSettingField;
 use App\Http\Requests\StoreEmploymentFrontendRequest;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -37,7 +38,8 @@ class HomeController extends Controller
     public function about(){
         $goals = Goal::orderBy('id', 'asc')->get();
         $teams = Team::with(['media'])->orderBy('id', 'asc')->get();
-        return view('frontend.about', compact('goals', 'teams'));
+        $dynamicFields = DynamicSettingField::active()->ordered()->get();
+        return view('frontend.about', compact('goals', 'teams', 'dynamicFields'));
     }
 
     public function managers(){
